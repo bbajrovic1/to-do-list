@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do list</title>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+
+<body>
+    <header>
+        <h1>Welcome!</h1>
+        <h2>Your daily and weekly tasks</h2>
+    </header>
+
+    <div class="container flexed">
+        <main>
+            <section class="task-list">
+                <h3>My To Do Lists</h3>
+                <ul>
+                    
+                </ul>
+                <button id="addNewBtn" class="btn" >+ Add New</button>
+            </section>
+
+
+            <div id="popup" class="popup invisible">
+                <button id="close-button" class="btn" >&times</button>
+                <h3>Create your new List</h3>
+                <input type="text" id="list-name" placeholder="List Name">
+                <button id="create-list" class="btn" >Submit</button>
+            </div>
+
+
+        </main>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="./scripts/index.js"></script>
+</body>
+
+</html>

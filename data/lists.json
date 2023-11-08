@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "Example list",
+    "tasks": [
+      {
+        "id": 1,
+        "name": "Example task 1",
+        "completed": true
+      },
+      {
+        "id": 2,
+        "name": "Example task 2",
+        "completed": false
+      }
+    ]
+  }
+]

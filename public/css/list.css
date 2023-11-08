@@ -1,0 +1,31 @@
+.checkbox {
+    width: 1.2rem;
+    height: 1.2rem;
+    accent-color: #113946;
+}
+
+
+ul li {
+    display: flex;
+    align-items: center;
+}
+
+#home {
+    position: absolute;
+    bottom: 100px;
+    right: 100px;
+}
+
+#create-task {
+    display: block;
+    margin: 0 auto;
+}
+
+#task-name {
+    width: 50%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    margin-top: 5rem;
+    background-color: #EAD7BB;
+    color: #113946;
+}

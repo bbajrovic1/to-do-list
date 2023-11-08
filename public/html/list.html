@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/list.css">
+    <link rel="stylesheet" href="../css/index.css">
+    
+</head>
+<body>
+    <header>
+        <h1 id="list-name-header"></h1>
+        <h2 id="unfinished-tasks"></h2>
+    </header>
+
+    <div class="container flexed">
+        <main>
+            <section class="task-list">
+                <h3>My Tasks</h3>
+                <ul>
+                    
+                </ul>
+                <button id="addNewBtn" class="btn" >+ Add New</button>
+            </section>
+
+
+            <div id="popup" class="popup invisible">
+                <button id="close-button" class="btn" >&times</button>
+                <h3>Add new task</h3>
+                <input type="text" id="task-name" placeholder="Task Name">
+                <button id="create-task" class="btn" >Submit</button>
+            </div>
+
+            <div id="home">
+                <a class="btn" id="homeBtn" href="./index.html">Home</a>
+            </div>
+
+        </main>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="./scripts/list.js"></script>
+</body>
+</html>
