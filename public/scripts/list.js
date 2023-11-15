@@ -127,15 +127,24 @@ function createNewTask(newTask) {
     newCheckbox.type = "checkbox";
     newCheckbox.className = "checkbox";
     newCheckbox.checked = newTask.completed;
+
+    // creating new span element
+    const span = document.createElement("span");
+    span.textContent = newTask.name;
+    if(newCheckbox.checked) {
+        span.classList.add("checked");
+    }
     newCheckbox.addEventListener("change", () => {
         const isChecked = newCheckbox.checked;
         if (isChecked) {
             unfinishedTasks--;
             unfinishedTasksCounter();
+            span.classList.add("checked");
         }
         else {
             unfinishedTasks++;
             unfinishedTasksCounter();
+            span.classList.remove("checked");
         }
 
         // updating json file every time a task is checked or unchecked
@@ -158,10 +167,6 @@ function createNewTask(newTask) {
             });
 
     });
-
-    // creating new span element
-    const span = document.createElement("span");
-    span.textContent = newTask.name;
 
     // creating delete button
     const deleteButton = document.createElement("button");
@@ -191,6 +196,6 @@ function createNewTask(newTask) {
     li.appendChild(span);
     li.appendChild(deleteButton);
 
-    // adding an li element iside the list
+    // adding an li element inside the list
     ul.appendChild(li);
 }

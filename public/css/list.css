@@ -29,3 +29,7 @@ ul li {
     background-color: #EAD7BB;
     color: #113946;
 }
+
+.checked {
+    text-decoration: line-through;
+}
