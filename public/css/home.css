@@ -1,39 +1,213 @@
+html {
+    font-family: Arial, sans-serif;
+}
+
 body {
-    background-color: #f7f2da; /* Koristi željenu paletu boja */
-    font-family: 'Arial', sans-serif; /* Koristi željeni font */
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #FFF2D8;
     margin: 0;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     height: 100vh;
 }
 
-.container {
-    text-align: center;
+header {
+    background-color: #113946;
+    padding: 20px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
-h1 {
-    color: #534b4b; /* Koristi željenu boju teksta */
-}
-
+h1,
 h2 {
-    color: #534b4b; /* Koristi željenu boju teksta */
+    margin: 0;
+    padding: 10px 0;
+    color: #F4CE14;
 }
 
-.buttons {
-    margin-top: 20px;
+.container {
+    background-color: #FFF2D8;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
-button {
-    background-color: #ddca8b; /* Koristi željenu boju dugmeta */
-    color: #534b4b; /* Koristi željenu boju teksta na dugmetu */
-    padding: 10px 20px;
-    margin: 0 10px;
+.container>* {
+    width: 80%;
+}
+
+.container h3 {
+    background-color: #113946;
+    color: #F4CE14;
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-bottom: 0;
+}
+
+
+
+
+/* ------------------------------------------------------------------ */
+/* TASK LIST */
+
+.task-list {
+    padding: 80px;
+}
+
+.task-list * {
+    margin: 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 0;
+}
+
+ul li {
+    padding: 1rem 0;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #113946;
+}
+
+ul li button.delete-button {
+    margin-left: auto;
+}
+
+ul li:hover {
+    background-color: #EAD7BB;
+}
+
+ul li a {
+    text-decoration: none;
+    color: #113946;
+}
+
+ul li a:hover {
+    color: #113946;
+}
+
+ul li a:visited {
+    color: #113946;
+}
+
+.container ul li:last-child {
+    margin-bottom: 2rem;
+}
+
+
+
+
+/* ------------------------------------------------------------------ */
+/*   BUTTONS   */
+
+.delete-button {
+    background-color: #113946;
+    color: #F4CE14;
     border: none;
+    padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #c4b58c; /* Koristi željenu boju dugmeta prilikom hover-a */
+.delete-button:hover {
+    cursor: pointer;
+    box-shadow: 0 0.2rem 0.7rem 0 rgba(17, 57, 70, 0.5);
+    transform: translateY(-0.1rem);
+    transition: transform 150ms;
+}
+
+.btn {
+    font-size: 1rem;
+    padding: 0.3rem 0.6rem;
+    width: 8rem;
+    text-align: center;
+    border: 0.2rem solid #113946;
+    margin-bottom: 1rem;
+    text-decoration: none;
+    color: #113946;
+    background-color: #F4CE14;
+    border-radius: 0.5rem;
+}
+
+.btn:hover {
+    cursor: pointer;
+    box-shadow: 0 0.2rem 0.7rem 0 rgba(17, 57, 70, 0.5);
+    transform: translateY(-0.1rem);
+    transition: transform 150ms;
+}
+
+#close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 2.5rem;;
+}
+
+#addNewBtn {
+    margin-top: 2rem;
+}
+
+
+
+
+
+/* ------------------------------------------------------------------ */
+/*   POP UP  */
+
+
+.popup {
+    width: 400px;
+    height: 30vh;
+    padding: 1rem;
+    background: #FFF2D8;
+    border: 6px solid #113946;
+    border-radius: 6px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.popup h3 {
+    margin-top: 0;
+    text-align: center;
+    background-color: #FFF2D8;
+    color: #113946;
+}
+
+#list-name {
+    width: 50%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    margin-top: 5rem;
+    background-color: #EAD7BB;
+    color: #113946;
+}
+
+#create-list {
+    display: block;
+    margin: 0 auto;
 }

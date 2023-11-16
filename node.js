@@ -26,6 +26,16 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/public/html/index.html");
 });
 
+// get the registration form page
+app.get("/register", (req, res) => {
+    res.sendFile(__dirname + "/public/html/register.html");
+});
+
+// get the login form page
+app.get("/login", (req, res) => {
+    res.sendFile(__dirname + "/public/html/login.html");
+});
+
 
 const dataPath = "data/lists.json";
 
