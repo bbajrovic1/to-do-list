@@ -3,6 +3,8 @@ import bodyParser from "body-parser";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import * as fs from "fs";
+import pg from "pg";
+
 
 // get the current directory path
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -10,6 +12,15 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // create an Express application
 const app = express();
 const port = 3000;
+
+const db = new pg.Client({
+    user: "postgres",
+    host: "localhost",
+    database: "to_do_list",
+    password: "Bake0911",
+    port: 5432,
+});
+db.connect();
 
 
 // serve static files from public directories
@@ -20,6 +31,7 @@ app.use(express.static("public"));
 
 // parse JSON data in incoming requests
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // serve the homepage
 app.get("/", (req, res) => {
@@ -29,6 +41,32 @@ app.get("/", (req, res) => {
 // get the registration form page
 app.get("/register", (req, res) => {
     res.sendFile(__dirname + "/public/html/register.html");
+});
+
+// POST route for user registration
+app.post("/register", async (req, res) => {
+    const { email, username, password } = req.body;
+
+    // check for required data
+    if (!email || !username || !password) {
+        return res.status(400).json({ error: "Missing required data" });
+    }
+
+    try {
+        // insert a new user into the database
+        const result = await db.query(
+            "INSERT INTO users (email, username, password) VALUES ($1, $2, $3) RETURNING id",
+            [email, username, password]
+        );
+
+        //const newUserId = result.rows[0].id;
+
+        //res.status(201).json({ id: newUserId });
+        res.redirect("/login");
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error during registration" });
+    }
 });
 
 // get the login form page
