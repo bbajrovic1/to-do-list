@@ -1,0 +1,39 @@
+body {
+    background-color: #f7f2da; /* Koristi željenu paletu boja */
+    font-family: 'Arial', sans-serif; /* Koristi željeni font */
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    color: #534b4b; /* Koristi željenu boju teksta */
+}
+
+h2 {
+    color: #534b4b; /* Koristi željenu boju teksta */
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+button {
+    background-color: #ddca8b; /* Koristi željenu boju dugmeta */
+    color: #534b4b; /* Koristi željenu boju teksta na dugmetu */
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #c4b58c; /* Koristi željenu boju dugmeta prilikom hover-a */
+}
