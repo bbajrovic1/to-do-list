@@ -106,8 +106,9 @@ submitBtn.addEventListener("click", function () {
         name: newListNameValue
     };
 
+    const userId = localStorage.getItem("userId");
     // adding new to do list
-    fetch("/liste", {
+    fetch(`/newList/${userId}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

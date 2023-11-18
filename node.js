@@ -117,9 +117,8 @@ app.post("/login", async (req, res) => {
 const dataPath = "data/lists.json";
 
 
-// retrieve an array of to do lists
-/*
-app.get("/liste", (req, res) => {
+// retrieve an array of to do lists - json
+/*app.get("/liste", (req, res) => {
     // read the content of a JSON file
     fs.readFile(dataPath, "utf8", (err, data) => {
         if (err) {
@@ -134,6 +133,7 @@ app.get("/liste", (req, res) => {
     });
 });*/
 
+// retrieve an array of to do lists
 app.get("/:userId/lists", (req, res) => {
     const userId = req.params.userId;
 
@@ -186,8 +186,8 @@ app.delete("/liste/:id", (req, res) => {
 });
 
 
-// create a new list item
-app.post("/liste", (req, res) => {
+// create a new list item - json
+/*app.post("/liste", (req, res) => {
     console.log(req.body);
     const { name } = req.body;
 
@@ -225,6 +225,36 @@ app.post("/liste", (req, res) => {
             res.json(newList); // return the created list as a response
         });
     });
+});*/
+
+
+// create a new list item
+app.post("/newList/:userId", async (req, res) => {
+    const { name } = req.body;
+    const userId = req.params.userId;
+
+    // check if there is any missing data from the body
+    if (!name) {
+        return res.status(400).json({ error: "Missing required data" });
+    }
+
+    try {
+        // get user id from local storage
+        //const userId = localStorage.getItem("userId");
+    
+        // insert new list in table lists
+        const result = await db.query(
+          "INSERT INTO lists (name, user_id) VALUES ($1, $2) RETURNING *",
+          [name, userId]
+        );
+    
+        const newList = result.rows[0];
+    
+        res.json(newList); // return new list
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error saving the new list" });
+      }
 });
 
 
