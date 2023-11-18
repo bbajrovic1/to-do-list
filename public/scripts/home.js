@@ -45,7 +45,7 @@ function fetchData() {
                 deleteButton.textContent = "Delete";
                 deleteButton.addEventListener("click", () => {
                     // deleting list with the selected id
-                    fetch(`/liste/${lista.id}`, {
+                    fetch(`/lists/${lista.id}`, {
                         method: "DELETE",
                     })
                         .then((response) => {

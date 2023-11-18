@@ -150,8 +150,8 @@ app.get("/:userId/lists", (req, res) => {
 });
 
 
-// delete a list by id
-app.delete("/liste/:id", (req, res) => {
+// delete a list by id - json
+/*app.delete("/liste/:id", (req, res) => {
     // read the content of a JSON file
     fs.readFile(dataPath, "utf8", (err, data) => {
         if (err) {
@@ -183,6 +183,26 @@ app.delete("/liste/:id", (req, res) => {
             res.json({ message: "List successfully deleted" });
         });
     });
+});*/
+
+// delete a list by id
+app.delete("/lists/:id", async (req, res) => {
+    const listId = +req.params.id;
+
+    try {
+        // Delete the list from the database based on the ID
+        const result = await db.query('DELETE FROM lists WHERE id = $1', [listId]);
+
+        // Check if a row was affected (list was deleted)
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "List not found" });
+        }
+
+        res.json({ message: "List successfully deleted" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error deleting the list" });
+    }
 });
 
 
@@ -239,22 +259,19 @@ app.post("/newList/:userId", async (req, res) => {
     }
 
     try {
-        // get user id from local storage
-        //const userId = localStorage.getItem("userId");
-    
         // insert new list in table lists
         const result = await db.query(
-          "INSERT INTO lists (name, user_id) VALUES ($1, $2) RETURNING *",
-          [name, userId]
+            "INSERT INTO lists (name, user_id) VALUES ($1, $2) RETURNING *",
+            [name, userId]
         );
-    
+
         const newList = result.rows[0];
-    
+
         res.json(newList); // return new list
-      } catch (error) {
+    } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Error saving the new list" });
-      }
+    }
 });
 
 
