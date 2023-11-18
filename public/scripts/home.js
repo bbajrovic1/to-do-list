@@ -4,6 +4,14 @@ var closeBtn = document.getElementById("close-button");
 var submitBtn = document.getElementById("create-list");
 var newListName = document.getElementById("list-name");
 const ul = document.querySelector("section.task-list ul");
+var logoutBtn = document.getElementById("logout");
+
+const userId = localStorage.getItem('userId');
+// check if userId exists in local storage
+if (userId === null) {
+    // if there is no user currently logged in, redirect to login page
+    window.location.href = '/login';
+}
 
 
 function clearList() {
@@ -15,7 +23,8 @@ function clearList() {
 // fetching lists from the json file
 function fetchData() {
     clearList(); // clearing old array of to do lists in case new list has been added
-    fetch("/liste")
+    const userId = localStorage.getItem("userId");
+    fetch(`/${userId}/lists`)
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
@@ -27,7 +36,7 @@ function fetchData() {
             data.forEach((lista) => {
                 const li = document.createElement("li");
                 const a = document.createElement("a");
-                a.href = "./list.html?listId="+lista.id;  // link to open list of tasks for selected to do list
+                a.href = "./list.html?listId=" + lista.id;  // link to open list of tasks for selected to do list
                 a.textContent = lista.name;
 
                 // creating delete button
@@ -117,4 +126,10 @@ submitBtn.addEventListener("click", function () {
     newListName.value = ""; // clearing input field
     fetchData(); // importing updated array of to do lists after adding new list
 
+});
+
+
+logoutBtn.addEventListener("click", function () {
+    localStorage.removeItem("userId");
+    window.location.href = "/login";
 });

@@ -43,6 +43,10 @@ app.get("/register", (req, res) => {
     res.sendFile(__dirname + "/public/html/register.html");
 });
 
+app.get("/home", (req, res) => {
+    res.sendFile(__dirname + "/public/html/home.html");
+});
+
 // POST route for user registration
 app.post("/register", async (req, res) => {
     const { email, username, password } = req.body;
@@ -75,10 +79,46 @@ app.get("/login", (req, res) => {
 });
 
 
+// POST route for user login
+app.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    // Check for required data
+    if (!username || !password) {
+        return res.status(400).json({ error: "Missing required data" });
+    }
+
+    try {
+        // Check if the user with the given username and password exists
+        const result = await db.query("SELECT * FROM users WHERE username = $1 AND password = $2", [
+            username,
+            password,
+        ]);
+
+        if (result.rows.length === 1) {
+            // User found, redirect to the home page after successful login
+            res.send(`
+            <script>
+                localStorage.setItem('userId', ${result.rows[0].id});
+                window.location.href = '/home'; // Redirect to home.html
+            </script>
+            `);
+        } else {
+            // User not found or incorrect credentials
+            res.status(401).json({ error: "Invalid login credentials" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error during login" });
+    }
+});
+
+
 const dataPath = "data/lists.json";
 
 
 // retrieve an array of to do lists
+/*
 app.get("/liste", (req, res) => {
     // read the content of a JSON file
     fs.readFile(dataPath, "utf8", (err, data) => {
@@ -92,7 +132,23 @@ app.get("/liste", (req, res) => {
         res.json(lists);
 
     });
+});*/
+
+app.get("/:userId/lists", (req, res) => {
+    const userId = req.params.userId;
+
+    // Fetch lists from the database based on the user ID
+    db.query('SELECT * FROM lists WHERE user_id = $1', [userId], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Error fetching lists from the database" });
+        }
+
+        const lists = result.rows;
+        res.json(lists);
+    });
 });
+
 
 // delete a list by id
 app.delete("/liste/:id", (req, res) => {
