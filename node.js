@@ -13,12 +13,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = 3000;
 
+// connect to database
 const db = new pg.Client({
     user: "postgres",
     host: "localhost",
-    database: "to_do_list",
-    password: "Bake0911",
-    port: 5432,
+    database: "to_do_list", // insert your database name
+    password: "Bake0911",   // insert your pgAdmin username
+    port: 5432,             // insert selected port for the database
 });
 db.connect();
 
@@ -83,28 +84,28 @@ app.get("/login", (req, res) => {
 app.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
-    // Check for required data
+    // check for required data
     if (!username || !password) {
         return res.status(400).json({ error: "Missing required data" });
     }
 
     try {
-        // Check if the user with the given username and password exists
+        // check if the user with the given username and password exists
         const result = await db.query("SELECT * FROM users WHERE username = $1 AND password = $2", [
             username,
             password,
         ]);
 
         if (result.rows.length === 1) {
-            // User found, redirect to the home page after successful login
+            // user found, redirect to the home page after successful login
             res.send(`
             <script>
-                localStorage.setItem('userId', ${result.rows[0].id});
-                window.location.href = '/home'; // Redirect to home.html
+                localStorage.setItem("userId", ${result.rows[0].id});
+                window.location.href = "/home"; // Redirect to home.html
             </script>
             `);
         } else {
-            // User not found or incorrect credentials
+            // user not found or incorrect credentials
             res.status(401).json({ error: "Invalid login credentials" });
         }
     } catch (error) {
@@ -113,32 +114,12 @@ app.post("/login", async (req, res) => {
     }
 });
 
-
-const dataPath = "data/lists.json";
-
-
-// retrieve an array of to do lists - json
-/*app.get("/liste", (req, res) => {
-    // read the content of a JSON file
-    fs.readFile(dataPath, "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Error reading data" });
-        }
-
-        // parse the JSON content
-        const lists = JSON.parse(data);
-        res.json(lists);
-
-    });
-});*/
-
 // retrieve an array of to do lists
 app.get("/:userId/lists", (req, res) => {
     const userId = req.params.userId;
 
-    // Fetch lists from the database based on the user ID
-    db.query('SELECT * FROM lists WHERE user_id = $1', [userId], (err, result) => {
+    // fetch lists from the database based on the user ID
+    db.query("SELECT * FROM lists WHERE user_id = $1", [userId], (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ error: "Error fetching lists from the database" });
@@ -149,51 +130,18 @@ app.get("/:userId/lists", (req, res) => {
     });
 });
 
-
-// delete a list by id - json
-/*app.delete("/liste/:id", (req, res) => {
-    // read the content of a JSON file
-    fs.readFile(dataPath, "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Error reading data" });
-        }
-
-        // parse the JSON content
-        const lists = JSON.parse(data);
-
-        // find a list by id
-        const listId = +req.params.id;
-        const listIndex = lists.findIndex((list) => list.id === listId);
-
-
-        if (listIndex === -1) {
-            return res.status(404).json({ error: "List not found" });
-        }
-
-        // remove the list from the array
-        lists.splice(listIndex, 1);
-
-        // save the updated data to the JSON file
-        fs.writeFile(dataPath, JSON.stringify(lists, null, 2), (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: "Error deleting the list" });
-            }
-            res.json({ message: "List successfully deleted" });
-        });
-    });
-});*/
-
 // delete a list by id
 app.delete("/lists/:id", async (req, res) => {
     const listId = +req.params.id;
 
     try {
-        // Delete the list from the database based on the ID
-        const result = await db.query('DELETE FROM lists WHERE id = $1', [listId]);
+        // delete all tasks that belonge to the deleted list
+        await db.query("DELETE FROM tasks WHERE list_id = $1", [listId]);
 
-        // Check if a row was affected (list was deleted)
+        // delete the list from the database based on the ID
+        const result = await db.query("DELETE FROM lists WHERE id = $1", [listId]);
+
+        // check if a row was affected (list was deleted)
         if (result.rowCount === 0) {
             return res.status(404).json({ error: "List not found" });
         }
@@ -204,49 +152,6 @@ app.delete("/lists/:id", async (req, res) => {
         res.status(500).json({ error: "Error deleting the list" });
     }
 });
-
-
-// create a new list item - json
-/*app.post("/liste", (req, res) => {
-    console.log(req.body);
-    const { name } = req.body;
-
-    // check if all required data is present in the request
-    if (!name) {
-        return res.status(400).json({ error: "Missing required data" });
-    }
-
-    // read the content of a JSON file
-    fs.readFile(dataPath, "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Error reading data" });
-        }
-
-        // parse the JSON content
-        const lists = JSON.parse(data);
-
-        // create a new list
-        const newList = {
-            id: lists.length + 1, // generate id
-            name,
-            tasks: [] // create an empty tasks array
-        };
-
-        // add the new list to the list array
-        lists.push(newList);
-
-        // save the updated data to the JSON file
-        fs.writeFile(dataPath, JSON.stringify(lists, null, 2), (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: "Error saving the new list" });
-            }
-            res.json(newList); // return the created list as a response
-        });
-    });
-});*/
-
 
 // create a new list item
 app.post("/newList/:userId", async (req, res) => {
@@ -276,165 +181,119 @@ app.post("/newList/:userId", async (req, res) => {
 
 
 // retrieve tasks for a specific list
-app.get("/tasks/:listId", (req, res) => {
-    const listId = req.params.listId; // get the list id from the URL parameter
-    fs.readFile(dataPath, "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Error reading data" });
-        }
+app.get("/tasks/:listId", async (req, res) => {
+    const listId = req.params.listId;
 
-        const lists = JSON.parse(data);
-        const selectedList = lists.find((list) => list.id === parseInt(listId, 10));
+    try {
+        // get tasks from the database based on the list ID
+        const result = await db.query("SELECT * FROM tasks WHERE list_id = $1", [listId]);
 
-        if (!selectedList) {
-            return res.status(404).json({ error: "List not found" });
-        }
-
-        res.json(selectedList.tasks); // return the task array for the selected list
-
-    });
+        const tasks = result.rows;
+        res.json(tasks);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error fetching tasks from the database" });
+    }
 });
-
 
 // retrieve a specific list by id
-app.get("/lists/:listId", (req, res) => {
+app.get("/lists/:listId", async (req, res) => {
     const listId = req.params.listId; // get the list id from the URL parameter
 
-    fs.readFile(dataPath, "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Error reading data" });
-        }
+    try {
+        // Fetch the list from the database based on the list ID
+        const result = await db.query("SELECT * FROM lists WHERE id = $1", [listId]);
 
-        const lists = JSON.parse(data);
-
-        // find the list with the matching id
-        const selectedList = lists.find((list) => list.id === parseInt(listId, 10));
-
-        if (!selectedList) {
+        if (result.rows.length === 0) {
             return res.status(404).json({ error: "List not found" });
         }
 
+        const selectedList = result.rows[0]; // Extract the first (and only) row
+
         res.json(selectedList); // return the found list as a response
-    });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error fetching the list from the database" });
+    }
 });
+
 
 
 // add a new task to a specific list
-app.post("/tasks/:listId/addTask", (req, res) => {
+app.post("/tasks/:listId/addTask", async (req, res) => {
     const listId = req.params.listId;
     const { name } = req.body;
 
-    fs.readFile(dataPath, "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Error reading data" });
-        }
+    try {
+        // insert a new task into the tasks table
+        const result = await db.query(
+            "INSERT INTO tasks (name, completed, list_id) VALUES ($1, $2, $3) RETURNING *",
+            [name, false, listId]
+        );
 
-        const lists = JSON.parse(data);
-        const selectedList = lists.find((list) => list.id === parseInt(listId, 10));
+        const newTask = result.rows[0];
 
-        const newTask = {
-            id: selectedList.tasks.length + 1,
-            name,
-            completed: false
-        };
-
-        if (!selectedList) {
-            return res.status(404).json({ error: "List not found" });
-        }
-
-        selectedList.tasks.push(newTask); // add the new task to the list
-
-        // save the updated data to the JSON file
-        fs.writeFile(dataPath, JSON.stringify(lists, null, 2), (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: "Error saving the new task" });
-            }
-            res.json(newTask); // return the updated task list as a response
-        });
-    });
+        res.json(newTask); // return the newly created task as a response
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error adding a new task" });
+    }
 });
 
 
-// delete a task from a specific list
-app.delete("/tasks/:listId/:taskId", (req, res) => {
+// delete a task
+app.delete("/tasks/:listId/:taskId", async (req, res) => {
     const listId = req.params.listId;
     const taskId = req.params.taskId;
 
-    fs.readFile(dataPath, "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Error reading data" });
-        }
+    try {
+        // check if the task with the given taskId and listId exists
+        const taskResult = await db.query("SELECT * FROM tasks WHERE id = $1 AND list_id = $2", [taskId, listId]);
 
-        const lists = JSON.parse(data);
-
-        const selectedList = lists.find((list) => list.id === parseInt(listId, 10));
-
-        if (!selectedList) {
-            return res.status(404).json({ error: "List not found" });
-        }
-
-        // find the index of the task you want to delete in the selected list
-        const taskIndex = selectedList.tasks.findIndex((task) => task.id === parseInt(taskId, 10));
-
-        if (taskIndex === -1) {
+        if (taskResult.rows.length === 0) {
             return res.status(404).json({ error: "Task not found" });
         }
 
-        // remove the task from the list
-        selectedList.tasks.splice(taskIndex, 1);
+        // delete the task from the tasks table
+        await db.query("DELETE FROM tasks WHERE id = $1", [taskId]);
 
-        // save the updated data to the JSON file
-        fs.writeFile(dataPath, JSON.stringify(lists, null, 2), (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: "Error deleting the task" });
-            }
-            res.json({ message: "Task successfully deleted" });
-        });
-    });
+        res.json({ message: "Task successfully deleted" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error deleting the task" });
+    }
 });
 
-app.put("/tasks/:listId/:taskId", (req, res) => {
-    const listId = req.params.listId; // list id
-    const taskId = req.params.taskId; // task id
-    const updatedTaskData = req.body; // new data for the task
 
-    fs.readFile(dataPath, "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Error reading data" });
-        }
+// update task
+app.put("/tasks/:listId/:taskId", async (req, res) => {
+    const listId = req.params.listId;
+    const taskId = req.params.taskId;
+    const { completed } = req.body; // updated data for the task
 
-        const lists = JSON.parse(data);
-        const selectedList = lists.find((list) => list.id === parseInt(listId, 10));
+    try {
+        // check if the list with the given listId exists
+        const listResult = await db.query("SELECT * FROM lists WHERE id = $1", [listId]);
 
-        if (!selectedList) {
+        if (listResult.rows.length === 0) {
             return res.status(404).json({ error: "List not found" });
         }
 
-        const selectedTask = selectedList.tasks.find((task) => task.id === parseInt(taskId, 10));
+        // check if the task with the given taskId and listId exists
+        const taskResult = await db.query("SELECT * FROM tasks WHERE id = $1 AND list_id = $2", [taskId, listId]);
 
-        if (!selectedTask) {
+        if (taskResult.rows.length === 0) {
             return res.status(404).json({ error: "Task not found" });
         }
 
-        // Update the task with new data
-        Object.assign(selectedTask, updatedTaskData);
+        // update the completed status of the task in the tasks table
+        await db.query("UPDATE tasks SET completed = $1 WHERE id = $2", [completed, taskId]);
 
-        // save the updated data to the JSON file
-        fs.writeFile(dataPath, JSON.stringify(lists, null, 2), (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: "Error saving updated data" });
-            }
-            res.json(selectedTask); // return the updated task as a response
-        });
-    });
+        res.json({ message: "Task successfully updated" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error updating the task" });
+    }
 });
 
 

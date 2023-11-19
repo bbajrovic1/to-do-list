@@ -1,8 +1,6 @@
 body {
     background-color: #f7f2da;
-    /* Koristi željenu paletu boja */
     font-family: 'Arial', sans-serif;
-    /* Koristi željeni font */
     margin: 0;
     display: flex;
     align-items: center;
@@ -16,7 +14,6 @@ body {
 
 h1 {
     color: #534b4b;
-    /* Koristi željenu boju teksta */
 }
 
 form {
@@ -25,7 +22,6 @@ form {
 
 label {
     color: #534b4b;
-    /* Koristi željenu boju teksta za labele */
     display: block;
     margin-bottom: 5px;
 }
@@ -39,9 +35,7 @@ input {
 
 button {
     background-color: #ddca8b;
-    /* Koristi željenu boju dugmeta */
     color: #534b4b;
-    /* Koristi željenu boju teksta na dugmetu */
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -50,32 +44,24 @@ button {
 
 button:hover {
     background-color: #c4b58c;
-    /* Koristi željenu boju dugmeta prilikom hover-a */
 }
 
 
-/* Dodajte ovo za stilizaciju linka za registraciju */
 .auth-link {
     margin-top: 10px;
-    /* Prilagodite razmak prema potrebi */
     font-size: 14px;
     color: #534b4b;
-    /* Boja linka */
 }
 
 .auth-link a {
     text-decoration: none;
-    /* Uklanja podvučenost */
     color: inherit;
-    /* Nasljeđuje boju od roditeljskog elementa (.auth-link) */
 }
 
 .auth-link a:hover {
     text-decoration: underline;
-    /* Dodaje podvučenost na hover */
 }
 
 .auth-link a:visited {
     color: #534b4b;
-    /* Boja linka na posjećenom linku */
 }

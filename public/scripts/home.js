@@ -6,11 +6,11 @@ var newListName = document.getElementById("list-name");
 const ul = document.querySelector("section.task-list ul");
 var logoutBtn = document.getElementById("logout");
 
-const userId = localStorage.getItem('userId');
+const userId = localStorage.getItem("userId");
 // check if userId exists in local storage
 if (userId === null) {
-    // if there is no user currently logged in, redirect to login page
-    window.location.href = '/login';
+    // if there is no user currently logged in, redirect to starting page
+    window.location.href = "/";
 }
 
 

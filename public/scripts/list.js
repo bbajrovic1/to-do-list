@@ -4,6 +4,13 @@ var closeBtn = document.getElementById("close-button");
 var submitTaskBtn = document.getElementById("create-task");
 var newTaskName = document.getElementById("task-name");
 
+const userId = localStorage.getItem("userId");
+// check if userId exists in local storage
+if (userId === null) {
+    // if there is no user currently logged in, redirect to starting page
+    window.location.href = "/";
+}
+
 const urlParams = new URLSearchParams(window.location.search);
 const listId = urlParams.get("listId");
 
